@@ -1,11 +1,13 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field, useFormik } from 'formik';
 import { nanoid } from 'nanoid';
 import { addContact } from 'redux/reduxSlices';
+import css from './ContactForm.module.css';
 
-export default function ContactForm() {
+export default function ContactForm({ form_container, input, btn_add }) {
   const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts.items);
 
   const nameInputId = nanoid();
   const numberInputId = nanoid();
@@ -17,8 +19,17 @@ export default function ContactForm() {
     },
     onSubmit: (values, { resetForm }) => {
       const { name, number } = values;
-      dispatch(addContact({ name, number }));
-      resetForm();
+
+      const isDuplicate = contacts.some(
+        contact => contact.name === name || contact.number === number
+      );
+
+      if (isDuplicate) {
+        alert('Dublicate contact');
+      } else {
+        dispatch(addContact({ name, number }));
+        resetForm();
+      }
     },
   });
 
@@ -28,9 +39,8 @@ export default function ContactForm() {
         initialValues={{ name: '', number: '' }}
         onSubmit={formik.handleSubmit}
       >
-        <Form>
+        <Form className={css.form_container}>
           <label htmlFor={nameInputId}>
-            Name
             <Field
               id={nameInputId}
               type="text"
@@ -40,10 +50,11 @@ export default function ContactForm() {
               required
               onChange={formik.handleChange}
               value={formik.values.name}
+              placeholder="Name"
+              className={css.input}
             />
           </label>
           <label htmlFor={numberInputId}>
-            Number
             <Field
               id={numberInputId}
               type="tel"
@@ -53,9 +64,13 @@ export default function ContactForm() {
               required
               onChange={formik.handleChange}
               value={formik.values.number}
+              placeholder="Number"
+              className={css.input}
             />
           </label>
-          <button type="submit">Add contact</button>
+          <button type="submit" className={css.btn_add}>
+            Add contact
+          </button>
         </Form>
       </Formik>
     </div>

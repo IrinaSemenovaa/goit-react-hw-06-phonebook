@@ -4,13 +4,9 @@ import { removeContact } from 'redux/reduxSlices';
 
 export default function ContactList() {
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts);
-  console.log(contacts);
+  const contacts = useSelector(state => state.contacts.items);
   const filter = useSelector(state => state.filter);
-
-  // const filteredContacts = contacts.filter(contact =>
-  //   contact.name.toLowerCase().includes(filter.toLowerCase())
-  // );
+  
   let filteredContacts = [];
   if (Array.isArray(contacts)) {
     filteredContacts = contacts.filter(contact =>
