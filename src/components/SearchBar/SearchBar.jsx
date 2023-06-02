@@ -1,13 +1,14 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFilter } from 'redux/reduxSlices';
+import { setFilter } from 'redux/filterSlice';
+import { selectFilter } from 'redux/selectors';
 import css from './SearchBar.module.css';
 
 export default function SearchBar({ search_input }) {
   const dispatch = useDispatch();
 
   // отримала значеняя filter стану сховища
-  const filter = useSelector(state => state.filter);
+  const filter = useSelector(selectFilter);
 
   const handleFilterChange = e => {
     const filterValue = e.target.value;

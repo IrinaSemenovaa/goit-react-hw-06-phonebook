@@ -7,26 +7,23 @@ export const contactsSlice = createSlice({
   name: 'contacts',
   initialState: { items: [] },
   reducers: {
-    addContact: (state, action) => {
-      const newContact = {
-        id: nanoid(),
-        ...action.payload,
-      };
-      state.items = [...state.items, newContact];
+    addContact: {
+      reducer: (state, action) => {
+        state.items.push(action.payload);
+      },
+      prepare: ({ name, number }) => {
+        return {
+          payload: {
+            id: nanoid(),
+            name,
+            number,
+          },
+        };
+      },
     },
     removeContact: (state, action) => {
       const contactId = action.payload;
       state.items = state.items.filter(contact => contact.id !== contactId);
-    },
-  },
-});
-
-export const filterSlice = createSlice({
-  name: 'filter',
-  initialState: '',
-  reducers: {
-    setFilter: (state, action) => {
-      return action.payload;
     },
   },
 });
@@ -52,4 +49,3 @@ export const persistedContactsReducer = persistReducer(
 );
 
 export const { addContact, removeContact } = contactsSlice.actions;
-export const { setFilter } = filterSlice.actions;

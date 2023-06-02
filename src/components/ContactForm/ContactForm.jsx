@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field, useFormik } from 'formik';
 import { nanoid } from 'nanoid';
 import { addContact } from 'redux/reduxSlices';
+import { selectContacts } from 'redux/selectors';
 import css from './ContactForm.module.css';
 
 export default function ContactForm({ form_container, input, btn_add }) {
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts.items);
+  const contacts = useSelector(selectContacts);
 
   const nameInputId = nanoid();
   const numberInputId = nanoid();
@@ -25,11 +26,11 @@ export default function ContactForm({ form_container, input, btn_add }) {
       );
 
       if (isDuplicate) {
-        alert('Dublicate contact');
-      } else {
-        dispatch(addContact({ name, number }));
-        resetForm();
+        return alert('Duplicate contact');
       }
+
+      dispatch(addContact({ name, number }));
+      resetForm();
     },
   });
 
